@@ -1,46 +1,67 @@
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
 
 public class ManagerStudent extends AbStudent implements IStudent {
     private ArrayList<Student> listStudent;
-   private ReadFile<Student> readFile;
+    private ReadFile<Student> readFile;
+
     public ManagerStudent() {
 
         listStudent = new ArrayList<Student>();
-         readFile = new ReadFile();
+        readFile = new ReadFile();
         listStudent = readFile.read();
     }
 
-
+// Thêm sinh viên
     public void add() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Thêm sinh viên");
+        System.err.println("Thêm sinh viên");
 
-        System.out.println("Mời nhập id");
-        int id = sc.nextInt();
-        sc.nextLine();
+        int id;
+        boolean check = true;
 
-        System.out.println("Mời nhập tên");
+        do {
+            System.out.println("Mời nhập  id:");
+            id = sc.nextInt();
+            sc.nextLine();
+
+            for (int i = 0; i < listStudent.size(); i++) {
+                if (listStudent.get(i).getId() == id) {
+                    check = false;
+                    System.err.println("Sinh viên có ID " + id + " đã tồn tại");
+
+                    break;
+                }
+                else {
+                    check = true;
+                }
+            }
+
+        } while (!check);
+
+        System.out.println("Mời nhập tên:");
         String name = sc.nextLine();
 
-        System.out.println("Mời nhập tuổi");
+        System.out.println("Mời nhập tuổi:");
         int age = sc.nextInt();
         sc.nextLine();
 
-        System.out.println("Mời bạn nhập quê");
+        System.out.println("Mời bạn nhập quê:");
         String address = sc.nextLine();
 
-        System.out.println("Mời bạn nhập điểm ");
-        int socore = sc.nextInt();
+        System.out.println("Mời bạn nhập điểm:");
+        int score = sc.nextInt();
 
-        Student st;
-        st = new Student(id, name, age, address, socore);
+        Student st = new Student(id, name, age, address, score);
         listStudent.add(st);
-        WriteFile.WriteFile(listStudent);
 
+        System.out.println();
+        System.err.println("Đã thêm sinh viên thành công");
+        WriteFile.WriteFile(listStudent);
     }
+
+
 
 
     @Override
@@ -49,86 +70,114 @@ public class ManagerStudent extends AbStudent implements IStudent {
                 "listStudent=" + listStudent +
                 '}';
     }
-
+// Hiển thị sinh viên
     @Override
     public void display() {
-        System.out.println("Hiển thị danh sách sinh viên");
+        System.err.println("Hiển thị danh sách sinh viên:");
         for (Student s : listStudent) {
             System.out.println(s);
         }
 
     }
 
-    @Override
+// Sửa sinh viên theo id
     public void edit() {
-        System.out.println("Mời nhập id của sinh viên cần sửa");
         Scanner sc = new Scanner(System.in);
-        int id = sc.nextInt();
+        System.err.println("Sửa sinh viên");
 
+        int id;
+        boolean validId = false;
+        do {
+            System.out.println("Mời nhập ID của sinh viên cần sửa:");
+            id = sc.nextInt();
+            sc.nextLine();
 
-        System.out.println("Mời nhập tên");
-        String name1 = sc.nextLine();
+            for (Student s : listStudent) {
+                if (s.getId() == id) {
+                    validId = true;
+                    System.out.println("Mời nhập tên:");
+                    String name1 = sc.nextLine();
 
-        System.out.println("Mời nhập tuổi");
-        int age1 = sc.nextInt();
-        sc.nextLine();
+                    System.out.println("Mời nhập tuổi:");
+                    int age1 = sc.nextInt();
+                    sc.nextLine();
 
-        System.out.println("Mời bạn nhập quê");
-        String address1 = sc.nextLine();
+                    System.out.println("Mời bạn nhập quê:");
+                    String address1 = sc.nextLine();
 
-        System.out.println("Mời bạn nhập điểm ");
-        int socore1 = sc.nextInt();
-        for (Student s : listStudent) {
-            if (s.getId() == id) {
-                s.setName(name1);
-                s.setAge(age1);
-                s.setAddress(address1);
-                s.setScore(socore1);
-                return;
+                    System.out.println("Mời bạn nhập điểm:");
+                    int score1 = sc.nextInt();
+                    sc.nextLine();
+
+                    s.setName(name1);
+                    s.setAge(age1);
+                    s.setAddress(address1);
+                    s.setScore(score1);
+
+                    System.out.println();
+                    System.err.println("Đã sửa sinh viên thành công");
+                    WriteFile.WriteFile(listStudent);
+                    break;
+                }
             }
-        }
-        System.out.println("Không tìm thấy sinh viên có ID là " + id);
 
+            if (!validId) {
+                System.err.println("Không tìm thấy sinh viên có ID là " + id);
+            }
+        } while (!validId);
     }
 
+// Xóa sinh viên theo id
     @Override
     public void delete() {
-        System.out.println("Nhập id của sinh viên cần xóa");
         Scanner scanner = new Scanner(System.in);
-        int id = scanner.nextInt();
-        Student st = null;
-        int size = listStudent.size();
-        for (int i = 0; i < size; i++) {
-            if (listStudent.get(i).getId() == id) {
-                st = listStudent.get(i);
-                break;
+        boolean found = false;
+        do {
+            System.out.println("Nhập id của sinh viên cần xóa:");
+            int id = scanner.nextInt();
+            Student st = null;
+            int size = listStudent.size();
+            for (int i = 0; i < size; i++) {
+                if (listStudent.get(i).getId() == id) {
+                    st = listStudent.get(i);
+                    break;
+                }
             }
-        }
-        if (st != null) {
-            listStudent.remove(st);
-            System.out.println("đã xóa thành công");
-        }
-
+            if (st != null) {
+                listStudent.remove(st);
+                System.out.println("Đã xóa thành công");
+                found = true;
+            } else {
+                System.err.println("Không tìm thấy sinh viên với id là " + id + ". Vui lòng nhập lại.");
+            }
+        } while (!found);
     }
-
+// Tìm sinh viên theo id
     @Override
     public void search() {
-        System.out.println("Tìm kiếm sinh viên theo id ");
         Scanner scanner = new Scanner(System.in);
-        int id = scanner.nextInt();
-        ArrayList<Student> list = ReadFile.read();
-        for (Student s : list) {
-            if (s.getId() == id) {
-                System.out.println(s);
-                break;
+        boolean found = false;
+        do {
+            System.out.println("Tìm kiếm sinh viên theo id:");
+            int id = scanner.nextInt();
+            ArrayList<Student> list = ReadFile.read();
+            for (Student s : list) {
+                if (s.getId() == id) {
+                    System.out.println(s);
+                    found = true;
+                    break;
+                }
             }
-        }
+            if (!found) {
+                System.out.println("Không tìm thấy sinh viên với id là " + id + ". Vui lòng nhập lại.");
+            }
+        } while (!found);
     }
 
-
+// Sắp xếp sinh viên theo tên
     @Override
     public void sortName() {
-        System.out.println("Sắp xếp sinh viên theo tên");
+        System.err.println("Sắp xếp sinh viên theo tên:");
 
         listStudent.sort(Comparator.comparing(Student::getName));
         for (Student student : listStudent) {
@@ -136,30 +185,96 @@ public class ManagerStudent extends AbStudent implements IStudent {
         }
     }
 
-
+// Sắp xếp sinh viên theo điểm
     @Override
     public void sortScore() {
-        System.out.println("Sắp xếp sinh viên theo điểm");
+        System.err.println("Sắp xếp sinh viên theo điểm:");
         listStudent.sort(Comparator.comparing(Student::getScore));
         for (Student student : listStudent) {
             System.out.println(student);
         }
     }
-
+// Hiển thị  sinh viên qua môn
     @Override
-    public void quamon() {
-        System.out.println("hiển thị sinh viên qua môn và không qua môn");
-        for (Student st : listStudent){
-            if(st.getScore()>=5){
-                System.out.println("Sinh viên qua môn"+st);
-            }else {
-                System.out.println("Sinh viên không qua môn"+st);
-            }
+    public void stPass() {
+        System.err.println("hiển thị sinh viên qua môn:");
+        for (Student st : listStudent) {
+            if (st.getScore() >= 5) {
+                System.out.println("Sinh viên qua môn là :" + st);
 
+            }
         }
     }
+// Hiển thị sinh viên phải học lại
+    @Override
+    public void stNoPass() {
+        for (Student st : listStudent) {
+            if (st.getScore() < 5) {
+                System.out.println("sinh viên học lại là :" + st);
+            }
+        }
+    }
+// Hiển thị số lượng sinh viên có trong danh sách
+    @Override
+    public void displaySize() {
+        System.err.println("Hiển thị số lượng sinh viên:");
+        System.out.println("Số lượng sinh viên có trong danh sách là :" + listStudent.size());
+    }
+
+// Hiển thị nhưunxg sinh viên có điểm cao nhất
+    @Override
+    public void studentsWithHighScores() {
+        int maxSocer = 0;
+        for (int i = 0; i < listStudent.size(); i++) {
+            if (listStudent.get(i).getScore() > maxSocer) {
+                maxSocer = listStudent.get(i).getScore();
+            }
+        }
+        ArrayList<Student> studentSocer = new ArrayList<>();
+        for (int i = 0; i < listStudent.size(); i++) {
+            if (listStudent.get(i).getScore() == maxSocer) {
+                studentSocer.add(listStudent.get(i));
+            }
+        }
+
+        System.out.println(studentSocer);
+    }
+//    Hiển thị những sinh viên có điểm thấp nhất
+@Override
+    public void studentsWithLowScores() {
+        int minSocer = 1;
+        for (int i = 0; i < listStudent.size(); i++) {
+            if (listStudent.get(i).getScore() < minSocer) {
+                minSocer = listStudent.get(i).getScore();
+            }
+        }
+        ArrayList<Student> studentSocer = new ArrayList<>();
+        for (int i = 0; i < listStudent.size(); i++) {
+            if (listStudent.get(i).getScore() == minSocer) {
+                studentSocer.add(listStudent.get(i));
+            }
+        }
+        System.out.println(studentSocer);
+    }
+
+    @Override
+    public void assessStudentCapacity() {
+       for (Student st:listStudent){
+           if(st.getScore()>8 && st.getScore()<=10){
+               System.out.println("Sinh viên đạt loại A là:"+st);
+           }else if (st.getScore()>6 && st.getScore()<=8){
+               System.out.println("Sinh viên đạt loại B là: "+st);
+           }else if (st.getScore()>4 && st.getScore()<=6){
+               System.out.println("Sinh viên đạt loại C là: "+st);
+           }else if (st.getScore()>2 && st.getScore()<=4){
+               System.out.println("Sinh viên đạt loại D là: "+st);
+           }else
+               System.out.println("Sinh viên đạt loại E là: "+st);
 
 
+       }
+
+    }
 
 
 }

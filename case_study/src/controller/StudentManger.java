@@ -1,23 +1,26 @@
+package controller;
+
+import storage.ReadFile;
+import storage.WriteFile;
+import model.Student;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 import java.util.Scanner;
 
-public class ManagerStudent extends AbStudent implements IStudent {
-    private ArrayList<Student> listStudent;
-    private ReadFile<Student> readFile;
+public class StudentManger extends AbStudent implements IStudent {
+    private List<Student> listStudent;
+    public StudentManger() {
+        listStudent = new ArrayList<>();
 
-    public ManagerStudent() {
-
-        listStudent = new ArrayList<Student>();
-        readFile = new ReadFile();
-        listStudent = readFile.read();
     }
 
 // Thêm sinh viên
     public void add() {
         Scanner sc = new Scanner(System.in);
         System.err.println("Thêm sinh viên");
-
+        listStudent = ReadFile.read();
         int id;
         boolean check = true;
 
@@ -58,7 +61,7 @@ public class ManagerStudent extends AbStudent implements IStudent {
 
         System.out.println();
         System.err.println("Đã thêm sinh viên thành công");
-        WriteFile.WriteFile(listStudent);
+        WriteFile.WriteFile((ArrayList<Student>) listStudent);
     }
 
 
@@ -66,16 +69,18 @@ public class ManagerStudent extends AbStudent implements IStudent {
 
     @Override
     public String toString() {
-        return "ManagerStudent{" +
+        return "controller.ManagerStudent{" +
                 "listStudent=" + listStudent +
                 '}';
     }
 // Hiển thị sinh viên
     @Override
     public void display() {
+        listStudent = ReadFile.read();
         System.err.println("Hiển thị danh sách sinh viên:");
         for (Student s : listStudent) {
             System.out.println(s);
+
         }
 
     }
@@ -107,7 +112,6 @@ public class ManagerStudent extends AbStudent implements IStudent {
 
                     System.out.println("Mời bạn nhập điểm:");
                     int score1 = sc.nextInt();
-                    sc.nextLine();
 
                     s.setName(name1);
                     s.setAge(age1);
@@ -116,7 +120,7 @@ public class ManagerStudent extends AbStudent implements IStudent {
 
                     System.out.println();
                     System.err.println("Đã sửa sinh viên thành công");
-                    WriteFile.WriteFile(listStudent);
+                    WriteFile.WriteFile((ArrayList<Student>) listStudent);
                     break;
                 }
             }
@@ -132,11 +136,28 @@ public class ManagerStudent extends AbStudent implements IStudent {
     public void delete() {
         Scanner scanner = new Scanner(System.in);
         boolean found = false;
-        do {
+        System.out.println("Nhập id của sinh viên cần xóa:");
+        int id = scanner.nextInt();
+        Student st = null;
+        int size = listStudent.size();
+        for (int i = 0; i < size; i++) {
+            if (listStudent.get(i).getId() == id) {
+                st = listStudent.get(i);
+                break;
+            }
+        }
+        if (st != null) {
+            listStudent.remove(st);
+            System.err.println("Đã xóa thành công");
+            found = true;
+        } else {
+            System.err.println("Không tìm thấy sinh viên với id là " + id + ". Vui lòng nhập lại.");
+        }
+        while (!found) {
             System.out.println("Nhập id của sinh viên cần xóa:");
-            int id = scanner.nextInt();
-            Student st = null;
-            int size = listStudent.size();
+            id = scanner.nextInt();
+            st = null;
+            size = listStudent.size();
             for (int i = 0; i < size; i++) {
                 if (listStudent.get(i).getId() == id) {
                     st = listStudent.get(i);
@@ -145,12 +166,13 @@ public class ManagerStudent extends AbStudent implements IStudent {
             }
             if (st != null) {
                 listStudent.remove(st);
-                System.out.println("Đã xóa thành công");
+                System.err.println("Đã xóa thành công");
                 found = true;
             } else {
                 System.err.println("Không tìm thấy sinh viên với id là " + id + ". Vui lòng nhập lại.");
             }
-        } while (!found);
+        }
+        WriteFile.WriteFile((ArrayList<Student>) listStudent);
     }
 // Tìm sinh viên theo id
     @Override

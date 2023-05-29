@@ -64,12 +64,12 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Student{" +
+        return "Student " +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", address='" + address + '\'' +
-                ", score=" + score +
-                '}';
+                "  |name='" + name + '\'' +
+                "  | age=" + age +
+                "  | address='" + address + '\'' +
+                "  | score=" + score
+                ;
     }
 }

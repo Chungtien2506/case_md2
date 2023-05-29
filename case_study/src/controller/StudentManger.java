@@ -11,12 +11,21 @@ import java.util.Scanner;
 
 public class StudentManger extends AbStudent implements IStudent {
     private List<Student> listStudent;
+
+    public List<Student> getListStudent() {
+        return listStudent;
+    }
+
+    public void setListStudent(List<Student> listStudent) {
+        this.listStudent = listStudent;
+    }
+
     public StudentManger() {
         listStudent = new ArrayList<>();
 
     }
 
-// Thêm sinh viên
+    // Thêm sinh viên
     public void add() {
         Scanner sc = new Scanner(System.in);
         System.err.println("Thêm sinh viên");
@@ -35,8 +44,7 @@ public class StudentManger extends AbStudent implements IStudent {
                     System.err.println("Sinh viên có ID " + id + " đã tồn tại");
 
                     break;
-                }
-                else {
+                } else {
                     check = true;
                 }
             }
@@ -65,15 +73,14 @@ public class StudentManger extends AbStudent implements IStudent {
     }
 
 
-
-
     @Override
     public String toString() {
         return "controller.ManagerStudent{" +
                 "listStudent=" + listStudent +
                 '}';
     }
-// Hiển thị sinh viên
+
+    // Hiển thị sinh viên
     @Override
     public void display() {
         listStudent = ReadFile.read();
@@ -85,17 +92,18 @@ public class StudentManger extends AbStudent implements IStudent {
 
     }
 
-// Sửa sinh viên theo id
+    // Sửa sinh viên theo id
     public void edit() {
         Scanner sc = new Scanner(System.in);
         System.err.println("Sửa sinh viên");
+
 
         int id;
         boolean validId = false;
         do {
             System.out.println("Mời nhập ID của sinh viên cần sửa:");
-            id = sc.nextInt();
-            sc.nextLine();
+            id = Integer.parseInt(sc.nextLine());
+//            sc.nextLine();
 
             for (Student s : listStudent) {
                 if (s.getId() == id) {
@@ -124,14 +132,13 @@ public class StudentManger extends AbStudent implements IStudent {
                     break;
                 }
             }
-
             if (!validId) {
                 System.err.println("Không tìm thấy sinh viên có ID là " + id);
             }
         } while (!validId);
     }
 
-// Xóa sinh viên theo id
+    // Xóa sinh viên theo id
     @Override
     public void delete() {
         Scanner scanner = new Scanner(System.in);
@@ -174,7 +181,8 @@ public class StudentManger extends AbStudent implements IStudent {
         }
         WriteFile.WriteFile((ArrayList<Student>) listStudent);
     }
-// Tìm sinh viên theo id
+
+    // Tìm sinh viên theo id
     @Override
     public void search() {
         Scanner scanner = new Scanner(System.in);
@@ -196,7 +204,7 @@ public class StudentManger extends AbStudent implements IStudent {
         } while (!found);
     }
 
-// Sắp xếp sinh viên theo tên
+    // Sắp xếp sinh viên theo tên
     @Override
     public void sortName() {
         System.err.println("Sắp xếp sinh viên theo tên:");
@@ -207,7 +215,7 @@ public class StudentManger extends AbStudent implements IStudent {
         }
     }
 
-// Sắp xếp sinh viên theo điểm
+    // Sắp xếp sinh viên theo điểm
     @Override
     public void sortScore() {
         System.err.println("Sắp xếp sinh viên theo điểm:");
@@ -216,7 +224,8 @@ public class StudentManger extends AbStudent implements IStudent {
             System.out.println(student);
         }
     }
-// Hiển thị  sinh viên qua môn
+
+    // Hiển thị  sinh viên qua môn
     @Override
     public void stPass() {
         System.err.println("hiển thị sinh viên qua môn:");
@@ -227,7 +236,8 @@ public class StudentManger extends AbStudent implements IStudent {
             }
         }
     }
-// Hiển thị sinh viên phải học lại
+
+    // Hiển thị sinh viên phải học lại
     @Override
     public void stNoPass() {
         for (Student st : listStudent) {
@@ -236,14 +246,15 @@ public class StudentManger extends AbStudent implements IStudent {
             }
         }
     }
-// Hiển thị số lượng sinh viên có trong danh sách
+
+    // Hiển thị số lượng sinh viên có trong danh sách
     @Override
     public void displaySize() {
         System.err.println("Hiển thị số lượng sinh viên:");
         System.out.println("Số lượng sinh viên có trong danh sách là :" + listStudent.size());
     }
 
-// Hiển thị nhưunxg sinh viên có điểm cao nhất
+    // Hiển thị nhưunxg sinh viên có điểm cao nhất
     @Override
     public void studentsWithHighScores() {
         int maxSocer = 0;
@@ -261,10 +272,11 @@ public class StudentManger extends AbStudent implements IStudent {
 
         System.out.println(studentSocer);
     }
-//    Hiển thị những sinh viên có điểm thấp nhất
-@Override
+
+    //    Hiển thị những sinh viên có điểm thấp nhất
+    @Override
     public void studentsWithLowScores() {
-        int minSocer = 1;
+        int minSocer = Integer.MAX_VALUE;
         for (int i = 0; i < listStudent.size(); i++) {
             if (listStudent.get(i).getScore() < minSocer) {
                 minSocer = listStudent.get(i).getScore();
@@ -281,22 +293,17 @@ public class StudentManger extends AbStudent implements IStudent {
 
     @Override
     public void assessStudentCapacity() {
-       for (Student st:listStudent){
-           if(st.getScore()>8 && st.getScore()<=10){
-               System.out.println("Sinh viên đạt loại A là:"+st);
-           }else if (st.getScore()>6 && st.getScore()<=8){
-               System.out.println("Sinh viên đạt loại B là: "+st);
-           }else if (st.getScore()>4 && st.getScore()<=6){
-               System.out.println("Sinh viên đạt loại C là: "+st);
-           }else if (st.getScore()>2 && st.getScore()<=4){
-               System.out.println("Sinh viên đạt loại D là: "+st);
-           }else
-               System.out.println("Sinh viên đạt loại E là: "+st);
-
-
-       }
-
+        for (Student st : listStudent) {
+            if (st.getScore() > 8 && st.getScore() <= 10) {
+                System.out.println("Sinh viên đạt loại A là:" + st);
+            } else if (st.getScore() > 6 && st.getScore() <= 8) {
+                System.out.println("Sinh viên đạt loại B là: " + st);
+            } else if (st.getScore() > 4 && st.getScore() <= 6) {
+                System.out.println("Sinh viên đạt loại C là: " + st);
+            } else if (st.getScore() > 2 && st.getScore() <= 4) {
+                System.out.println("Sinh viên đạt loại D là: " + st);
+            } else
+                System.out.println("Sinh viên đạt loại E là: " + st);
+        }
     }
-
-
 }
